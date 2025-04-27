@@ -26,7 +26,7 @@ import com.ghn.composelistkit.ComposeListKit
 @Composable
 fun SampleListScreen(navController: NavHostController) {
     val items = remember {
-        listOf("普通列表", "刷新加载更多")
+        listOf("普通列表", "刷新加载更多","状态页面","添加头和尾")
     }
     ComposeListKit(items = items) { item ->
         Text(
@@ -37,6 +37,8 @@ fun SampleListScreen(navController: NavHostController) {
                     when (item) {
                         "普通列表" -> navController.navigate("ui/SimpleDetailScreen")
                         "刷新加载更多" -> navController.navigate("ui/RefreshableDetailScreen")
+                        "状态页面" -> navController.navigate("ui/StateScreen")
+                        "添加头和尾" ->navController.navigate("ui/SampleHeaderFooterScreen")
                     }
                 }
                 .padding(16.dp)
