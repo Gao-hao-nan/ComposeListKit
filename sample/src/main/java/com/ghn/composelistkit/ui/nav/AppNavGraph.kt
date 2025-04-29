@@ -5,9 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ghn.composelistkit.ui.RefreshableDetailScreen
+import com.ghn.composelistkit.ui.screen.RefreshableDetailScreen
+import com.ghn.composelistkit.ui.SampleHeaderFooterScreen
 import com.ghn.composelistkit.ui.SampleListScreen
 import com.ghn.composelistkit.ui.SimpleDetailScreen
+import com.ghn.composelistkit.ui.StateScreen
 
 /**
  * @author 浩楠
@@ -19,7 +21,7 @@ import com.ghn.composelistkit.ui.SimpleDetailScreen
  *    / _ \ | '_ \ / _` | '__/ _ \| |/ _` | \___ \| __| | | |/ _` | |/ _ \
  *   / ___ \| | | | (_| | | | (_) | | (_| |  ___) | |_| |_| | (_| | | (_) |
  *  /_/   \_\_| |_|\__,_|_|  \___/|_|\__,_| |____/ \__|\__,_|\__,_|_|\___/
- * @Description: TODO
+ * @Description: TODO 路由管理
  */
 @Composable
 fun AppNavGraph(navController: NavHostController = rememberNavController()) {
@@ -34,6 +36,13 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
 
         composable("ui/RefreshableDetailScreen") {
             RefreshableDetailScreen()
+        }
+
+        composable ("ui/StateScreen"){
+            StateScreen()
+        }
+        composable("ui/SampleHeaderFooterScreen") {
+            SampleHeaderFooterScreen()
         }
     }
 }

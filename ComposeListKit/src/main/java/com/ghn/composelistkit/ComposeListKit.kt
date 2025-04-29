@@ -1,22 +1,14 @@
 package com.ghn.composelistkit
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.foundation.lazy.*
+import com.ghn.composelistkit.wrapper.HeaderFooterWrapper
+import com.ghn.composelistkit.wrapper.LazyListContent
+import com.ghn.composelistkit.wrapper.RefreshWrapper
+import com.ghn.composelistkit.wrapper.StateWrapper
 
 /**
  * @author 浩楠
@@ -39,11 +31,18 @@ fun <T> ComposeListKit(
     onRefresh: (() -> Unit)? = null,
     isLoadingMore: Boolean = false,
     onLoadMore: (() -> Unit)? = null,
+    isLoadingFirstPage: Boolean = false,
+    isError: Boolean = false,
+    onRetry: (() -> Unit)? = null,
+    emptyContent: (@Composable () -> Unit)? = null,
+    errorContent: (@Composable () -> Unit)? = null,
+    loadingContent: (@Composable () -> Unit)? = null,
+    headerContent: (@Composable () -> Unit)? = null,
+    footerContent: (@Composable () -> Unit)? = null,
     itemContent: @Composable (T) -> Unit
 ) {
     val listState = rememberLazyListState()
 
-    // 加载更多监听
     LaunchedEffect(listState) {
         if (onLoadMore != null) {
             snapshotFlow {
@@ -57,41 +56,37 @@ fun <T> ComposeListKit(
         }
     }
 
-    val content = @Composable {
-        LazyColumn(state = listState, modifier = modifier) {
-            items(
+    StateWrapper(
+        isLoadingFirstPage = isLoadingFirstPage,
+        isError = isError,
+        itemsEmpty = items.isEmpty(),
+        onRetry = onRetry,
+        loadingContent = loadingContent,
+        errorContent = errorContent,
+        emptyContent = emptyContent
+    ) {
+        val listContent = @Composable {
+            HeaderFooterWrapper(
                 items = items,
-                key = keySelector ?: { it.hashCode() }
-            ) { item ->
-                itemContent(item)
-            }
-
-            if (isLoadingMore) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-            }
+                modifier = modifier,
+                keySelector = keySelector,
+                listState = listState,
+                isLoadingMore = isLoadingMore,
+                headerContent = headerContent,
+                footerContent = footerContent,
+                itemContent = itemContent
+            )
         }
-    }
 
-    if (onRefresh != null) {
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-            onRefresh = onRefresh,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            content()
+        if (onRefresh != null) {
+            RefreshWrapper(
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh
+            ) {
+                listContent()
+            }
+        } else {
+            listContent()
         }
-    } else {
-        content()
     }
 }
-
-

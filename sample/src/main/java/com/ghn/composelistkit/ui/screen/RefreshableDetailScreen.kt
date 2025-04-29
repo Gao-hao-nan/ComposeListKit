@@ -1,4 +1,4 @@
-package com.ghn.composelistkit.ui
+package com.ghn.composelistkit.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
