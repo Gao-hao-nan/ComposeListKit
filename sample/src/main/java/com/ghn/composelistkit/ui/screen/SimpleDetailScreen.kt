@@ -1,4 +1,4 @@
-package com.ghn.composelistkit.ui
+package com.ghn.composelistkit.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,14 +29,15 @@ fun SimpleDetailScreen() {
     LaunchedEffect(Unit) {
         items.addAll(1..20)
     }
-    ComposeListKit(
-        items = items
-    ) { item ->
-        Text(
-            text = "Item $item",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
+    ComposeListKit<Int> {
+        items(items)
+        itemContent { item ->
+            Text(
+                text = "Item $item",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
     }
 }

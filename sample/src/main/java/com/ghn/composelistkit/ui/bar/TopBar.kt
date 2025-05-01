@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 /**
@@ -39,6 +40,6 @@ fun TopBar(title: String, onBackClick: () -> Unit) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "返回")
             }
         },
-        colors = colors
+        colors = colors,
     )
 }

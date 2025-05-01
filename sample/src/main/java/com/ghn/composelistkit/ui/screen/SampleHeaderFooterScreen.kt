@@ -1,4 +1,4 @@
-package com.ghn.composelistkit.ui
+package com.ghn.composelistkit.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,10 +60,10 @@ fun SampleHeaderFooterScreen() {
                 Text(text = "添加到尾部")
             }
         }
-        ComposeListKit(
-            items = items,
-            modifier = Modifier.weight(1f),
-            headerContent = {
+        ComposeListKit<String> {
+            items(items)
+            modifier(Modifier.weight(1f))
+            header {
                 Box(
                     Modifier
                         .fillMaxWidth()
@@ -72,8 +72,8 @@ fun SampleHeaderFooterScreen() {
                 ) {
                     Text(text = "我是 Header 区域", style = MaterialTheme.typography.titleMedium)
                 }
-            },
-            footerContent = {
+            }
+            footer {
                 Box(
                     Modifier
                         .fillMaxWidth()
@@ -83,13 +83,16 @@ fun SampleHeaderFooterScreen() {
                     Text(text = "我是 Footer 区域", style = MaterialTheme.typography.titleMedium)
                 }
             }
-        ) { item ->
-            Text(
-                text = item,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
+
+            itemContent { item ->
+                Text(
+                    text = item,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
         }
+
     }
 }

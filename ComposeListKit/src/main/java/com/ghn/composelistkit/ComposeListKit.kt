@@ -4,11 +4,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Modifier
+import com.ghn.composelistkit.config.ComposeListKitConfig
+import com.ghn.composelistkit.listkit.ComposeListKitBuilder
 import com.ghn.composelistkit.wrapper.HeaderFooterWrapper
-import com.ghn.composelistkit.wrapper.LazyListContent
 import com.ghn.composelistkit.wrapper.RefreshWrapper
 import com.ghn.composelistkit.wrapper.StateWrapper
+import com.ghn.composelistkit.wrapper.StickySectionWrapper
 
 /**
  * @author 浩楠
@@ -23,65 +24,69 @@ import com.ghn.composelistkit.wrapper.StateWrapper
  * @Description: TODO
  */
 @Composable
-fun <T> ComposeListKit(
-    items: List<T>,
-    modifier: Modifier = Modifier,
-    keySelector: ((T) -> Any)? = null,
-    isRefreshing: Boolean = false,
-    onRefresh: (() -> Unit)? = null,
-    isLoadingMore: Boolean = false,
-    onLoadMore: (() -> Unit)? = null,
-    isLoadingFirstPage: Boolean = false,
-    isError: Boolean = false,
-    onRetry: (() -> Unit)? = null,
-    emptyContent: (@Composable () -> Unit)? = null,
-    errorContent: (@Composable () -> Unit)? = null,
-    loadingContent: (@Composable () -> Unit)? = null,
-    headerContent: (@Composable () -> Unit)? = null,
-    footerContent: (@Composable () -> Unit)? = null,
-    itemContent: @Composable (T) -> Unit
-) {
+fun <T> ComposeListKit(build: ComposeListKitBuilder<T>.() -> Unit) {
+    val builder = ComposeListKitBuilder<T>().apply(build)
+    InternalComposeListKit(builder.build())
+}
+@Composable
+internal fun <T> InternalComposeListKit(config: ComposeListKitConfig<T>) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
-        if (onLoadMore != null) {
+        if (config.onLoadMore != null) {
             snapshotFlow {
                 val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-                lastVisible >= items.lastIndex
+                lastVisible >= config.items.lastIndex
             }.collect { isBottom ->
-                if (isBottom && !isLoadingMore) {
-                    onLoadMore()
+                if (isBottom && !config.isLoadingMore) {
+                    config.onLoadMore?.invoke()
                 }
             }
         }
     }
-
     StateWrapper(
-        isLoadingFirstPage = isLoadingFirstPage,
-        isError = isError,
-        itemsEmpty = items.isEmpty(),
-        onRetry = onRetry,
-        loadingContent = loadingContent,
-        errorContent = errorContent,
-        emptyContent = emptyContent
+        isLoadingFirstPage = config.isLoadingFirstPage,
+        isError = config.isError,
+        itemsEmpty = config.items.isEmpty() && config.groupedItems.isNullOrEmpty(),
+        onRetry = config.onRetry,
+        loadingContent = config.loadingContent,
+        errorContent = config.errorContent,
+        emptyContent = config.emptyContent
     ) {
         val listContent = @Composable {
-            HeaderFooterWrapper(
-                items = items,
-                modifier = modifier,
-                keySelector = keySelector,
-                listState = listState,
-                isLoadingMore = isLoadingMore,
-                headerContent = headerContent,
-                footerContent = footerContent,
-                itemContent = itemContent
-            )
+            if (config.groupedItems != null &&
+                config.groupTitleSelector != null &&
+                config.groupItemsSelector != null &&
+                config.groupHeaderContent != null
+            ) {
+                StickySectionWrapper(
+                    groups = config.groupedItems!!,
+                    listState = listState,
+                    isSticky = config.isStickyGroup,
+                    groupTitleSelector = config.groupTitleSelector!!,
+                    groupItemsSelector = config.groupItemsSelector!!,
+                    itemKey = config.keySelector,
+                    isLoadingMore = config.isLoadingMore,
+                    groupHeaderContent = config.groupHeaderContent!!,
+                    itemContent = config.itemContent
+                )
+            } else {
+                HeaderFooterWrapper(
+                    items = config.items,
+                    modifier = config.modifier,
+                    keySelector = config.keySelector,
+                    listState = listState,
+                    isLoadingMore = config.isLoadingMore,
+                    headerContent = config.headerContent,
+                    footerContent = config.footerContent,
+                    itemContent = config.itemContent
+                )
+            }
         }
-
-        if (onRefresh != null) {
+        if (config.onRefresh != null) {
             RefreshWrapper(
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh
+                isRefreshing = config.isRefreshing,
+                onRefresh = config.onRefresh
             ) {
                 listContent()
             }
@@ -90,3 +95,6 @@ fun <T> ComposeListKit(
         }
     }
 }
+
+
+

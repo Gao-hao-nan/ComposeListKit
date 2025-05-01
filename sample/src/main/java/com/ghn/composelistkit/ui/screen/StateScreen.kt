@@ -1,4 +1,4 @@
-package com.ghn.composelistkit.ui
+package com.ghn.composelistkit.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ghn.composelistkit.ComposeListKit
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -59,7 +60,7 @@ fun StateScreen() {
                 isError = false
                 items.clear()
                 coroutineScope.launch {
-                    kotlinx.coroutines.delay(2000)
+                    delay(2000)
                     isLoadingFirstPage = false
                     items.addAll((1..20).map { "Item $it" })
                 }
@@ -95,58 +96,67 @@ fun StateScreen() {
                 Text(text = "正常数据")
             }
         }
-        ComposeListKit(
-            items = items,
-            modifier = Modifier.weight(1f),
-            isRefreshing = isRefreshing,
-            onRefresh = {
+        ComposeListKit<String> {
+            items(items)
+            modifier(Modifier.weight(1f))
+
+            isRefreshing(isRefreshing)
+            onRefresh {
                 isRefreshing = true
                 coroutineScope.launch {
-
+                    // 模拟刷新逻辑
                     isRefreshing = false
                 }
-            },
-            isLoadingFirstPage = isLoadingFirstPage,
-            isError = isError,
-            onRetry = {
+            }
+
+            isLoadingFirstPage(isLoadingFirstPage)
+            isError(isError)
+            onRetry {
                 isError = false
                 isLoadingFirstPage = true
                 coroutineScope.launch {
+                    // 模拟重试加载
                     isLoadingFirstPage = false
                 }
-            },
-            isLoadingMore = isLoadingMore,
-            onLoadMore = {
+            }
+
+            isLoadingMore(isLoadingMore)
+            onLoadMore {
                 isLoadingMore = true
                 coroutineScope.launch {
-                    kotlinx.coroutines.delay(1500)
+                    delay(1500)
                     val next = (items.size + 1)..(items.size + 20)
                     items.addAll(next.map { "More Item $it" })
                     isLoadingMore = false
                 }
-            },
-            emptyContent = {
+            }
+
+            emptyContent {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = "这里空空如也～")
                 }
-            },
-            errorContent = {
+            }
+
+            errorContent {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = "加载失败，点我重试")
                 }
-            },
-            loadingContent = {
+            }
+
+            loadingContent {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
             }
-        ) { item ->
-            Text(
-                text = item,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
+
+            itemContent { item ->
+                Text(
+                    text = item,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
         }
     }
 }

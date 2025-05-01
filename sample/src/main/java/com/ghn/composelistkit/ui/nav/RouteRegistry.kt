@@ -1,0 +1,35 @@
+package com.ghn.composelistkit.ui.nav
+
+import androidx.compose.runtime.Composable
+import com.ghn.composelistkit.ui.screen.StateScreen
+import com.ghn.composelistkit.ui.screen.RefreshableDetailScreen
+import com.ghn.composelistkit.ui.screen.SampleHeaderFooterScreen
+import com.ghn.composelistkit.ui.screen.SimpleDetailScreen
+import com.ghn.composelistkit.ui.screen.StickySectionScreen
+
+/**
+ * @author 浩楠
+ *
+ * @date 2025/4/30-22:09
+ *
+ *      _              _           _     _   ____  _             _ _
+ *     / \   _ __   __| |_ __ ___ (_) __| | / ___|| |_ _   _  __| (_) ___
+ *    / _ \ | '_ \ / _` | '__/ _ \| |/ _` | \___ \| __| | | |/ _` | |/ _ \
+ *   / ___ \| | | | (_| | | | (_) | | (_| |  ___) | |_| |_| | (_| | | (_) |
+ *  /_/   \_\_| |_|\__,_|_|  \___/|_|\__,_| |____/ \__|\__,_|\__,_|_|\___/
+ * @Description: TODO
+ */
+object RouteRegistry {
+    val entries: List<Pair<String, @Composable () -> Unit>> = listOf(
+        "普通列表" to { SimpleDetailScreen() },
+        "刷新加载更多" to { RefreshableDetailScreen() },
+        "状态页面" to { StateScreen() },
+        "添加头和尾" to { SampleHeaderFooterScreen() },
+        "吸顶分组" to { StickySectionScreen() }
+    )
+
+    val routeMap: Map<String, @Composable () -> Unit> =
+        entries.associate { (it.first to it.second) }
+    val routeTitleMap: Map<String, String> =
+        entries.associate { (it.first to it.first) }
+}

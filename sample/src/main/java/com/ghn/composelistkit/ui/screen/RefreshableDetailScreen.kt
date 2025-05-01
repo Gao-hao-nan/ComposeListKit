@@ -39,11 +39,10 @@ fun RefreshableDetailScreen() {
     LaunchedEffect(Unit) {
         items.addAll((1..20).map { "Item $it" })
     }
-
-    ComposeListKit(
-        items = items,
-        isRefreshing = isRefreshing,
-        onRefresh = {
+    ComposeListKit<String> {
+        items(items)
+        isRefreshing(isRefreshing)
+        onRefresh {
             isRefreshing = true
             coroutineScope.launch {
                 delay(1000)
@@ -51,9 +50,9 @@ fun RefreshableDetailScreen() {
                 items.addAll((101..120).map { "Refreshed $it" })
                 isRefreshing = false
             }
-        },
-        isLoadingMore = isLoadingMore,
-        onLoadMore = {
+        }
+        isLoadingMore(isLoadingMore)
+        onLoadMore {
             isLoadingMore = true
             coroutineScope.launch {
                 delay(1000)
@@ -62,12 +61,14 @@ fun RefreshableDetailScreen() {
                 isLoadingMore = false
             }
         }
-    ) { item ->
-        Text(
-            text = item,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
+        itemContent { item ->
+            Text(
+                text = item,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
     }
+
 }

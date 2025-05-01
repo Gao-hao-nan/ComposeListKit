@@ -2,14 +2,6 @@ package com.ghn.composelistkit.ui.nav
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.ghn.composelistkit.ui.screen.RefreshableDetailScreen
-import com.ghn.composelistkit.ui.SampleHeaderFooterScreen
-import com.ghn.composelistkit.ui.SampleListScreen
-import com.ghn.composelistkit.ui.SimpleDetailScreen
-import com.ghn.composelistkit.ui.StateScreen
 
 /**
  * @author 浩楠
@@ -24,26 +16,14 @@ import com.ghn.composelistkit.ui.StateScreen
  * @Description: TODO 路由管理
  */
 @Composable
-fun AppNavGraph(navController: NavHostController = rememberNavController()) {
-    NavHost(navController, startDestination = "ui/list") {
-        composable("ui/list") {
-            SampleListScreen(navController)
+fun AppNavGraph(navController: NavHostController) {
+    AutoNavHost(
+        navController = navController,
+        routeMap = RouteRegistry.routeMap,
+        startDestination = "ui/list",
+        listScreen = { controller, titles ->
+            AutoNavListScreen(controller, titles)
         }
-
-        composable("ui/SimpleDetailScreen") {
-            SimpleDetailScreen()
-        }
-
-        composable("ui/RefreshableDetailScreen") {
-            RefreshableDetailScreen()
-        }
-
-        composable ("ui/StateScreen"){
-            StateScreen()
-        }
-        composable("ui/SampleHeaderFooterScreen") {
-            SampleHeaderFooterScreen()
-        }
-    }
+    )
 }
 
