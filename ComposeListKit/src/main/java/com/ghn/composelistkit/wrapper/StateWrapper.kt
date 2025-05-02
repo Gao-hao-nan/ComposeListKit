@@ -28,7 +28,7 @@ fun StateWrapper(
     itemsEmpty: Boolean,
     onRetry: (() -> Unit)? = null,
     loadingContent: (@Composable () -> Unit)? = null,
-    errorContent: (@Composable () -> Unit)? = null,
+    errorContent: (@Composable (() -> Unit))? = null,
     emptyContent: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
@@ -40,22 +40,31 @@ fun StateWrapper(
                 }
             })()
         }
+
         isError -> {
             (errorContent ?: {
-                Box(Modifier.fillMaxSize().clickable { onRetry?.invoke() }, contentAlignment = Alignment.Center) {
-                    Text(text = "加载失败，点击重试")
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .clickable { onRetry?.invoke() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("加载失败，点击重试")
                 }
             })()
         }
+
         itemsEmpty -> {
             (emptyContent ?: {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "暂无数据")
+                    Text("暂无数据")
                 }
             })()
         }
+
         else -> {
             content()
         }
     }
 }
+
