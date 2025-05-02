@@ -38,5 +38,8 @@ data class ComposeListKitConfig<T>(
     var groupItemsSelector: ((Any) -> List<T>)? = null,
     var groupHeaderContent: (@Composable (String) -> Unit)? = null,
     var isStickyGroup: Boolean = true,
-
+    var useLongPress: Boolean = false,
+    var enableHighlight: Boolean = true,
+    var dragHandle: (@Composable () -> Unit)? = null,
+    var dragItemContent: (@Composable (item: T, isDragging: Boolean) -> Unit)? = null
 )

@@ -4,8 +4,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.toMutableStateList
 import com.ghn.composelistkit.config.ComposeListKitConfig
 import com.ghn.composelistkit.listkit.ComposeListKitBuilder
+import com.ghn.composelistkit.wrapper.DragReorderWrapper
 import com.ghn.composelistkit.wrapper.HeaderFooterWrapper
 import com.ghn.composelistkit.wrapper.RefreshWrapper
 import com.ghn.composelistkit.wrapper.StateWrapper
@@ -28,6 +30,7 @@ fun <T> ComposeListKit(build: ComposeListKitBuilder<T>.() -> Unit) {
     val builder = ComposeListKitBuilder<T>().apply(build)
     InternalComposeListKit(builder.build())
 }
+
 @Composable
 internal fun <T> InternalComposeListKit(config: ComposeListKitConfig<T>) {
     val listState = rememberLazyListState()
@@ -54,33 +57,52 @@ internal fun <T> InternalComposeListKit(config: ComposeListKitConfig<T>) {
         emptyContent = config.emptyContent
     ) {
         val listContent = @Composable {
-            if (config.groupedItems != null &&
-                config.groupTitleSelector != null &&
-                config.groupItemsSelector != null &&
-                config.groupHeaderContent != null
-            ) {
-                StickySectionWrapper(
-                    groups = config.groupedItems!!,
-                    listState = listState,
-                    isSticky = config.isStickyGroup,
-                    groupTitleSelector = config.groupTitleSelector!!,
-                    groupItemsSelector = config.groupItemsSelector!!,
-                    itemKey = config.keySelector,
-                    isLoadingMore = config.isLoadingMore,
-                    groupHeaderContent = config.groupHeaderContent!!,
-                    itemContent = config.itemContent
-                )
-            } else {
-                HeaderFooterWrapper(
-                    items = config.items,
-                    modifier = config.modifier,
-                    keySelector = config.keySelector,
-                    listState = listState,
-                    isLoadingMore = config.isLoadingMore,
-                    headerContent = config.headerContent,
-                    footerContent = config.footerContent,
-                    itemContent = config.itemContent
-                )
+            when {
+                //分组吸顶
+                config.groupedItems != null &&
+                        config.groupTitleSelector != null &&
+                        config.groupItemsSelector != null &&
+                        config.groupHeaderContent != null -> {
+
+                    StickySectionWrapper(
+                        groups = config.groupedItems!!,
+                        listState = listState,
+                        isSticky = config.isStickyGroup,
+                        groupTitleSelector = config.groupTitleSelector!!,
+                        groupItemsSelector = config.groupItemsSelector!!,
+                        itemKey = config.keySelector,
+                        isLoadingMore = config.isLoadingMore,
+                        groupHeaderContent = config.groupHeaderContent!!,
+                        itemContent = config.itemContent
+                    )
+                }
+
+                // 拖拽
+                config.dragItemContent !== null -> {
+                    DragReorderWrapper(
+                        items = config.items.toMutableStateList(),
+                        listState = listState,
+                        modifier = config.modifier,
+                        enableHighlight = config.enableHighlight,
+                        useLongPress = config.useLongPress,
+                        dragHandle = config.dragHandle,
+                        itemKey = config.keySelector,
+                        itemContent = config.dragItemContent!!
+                    )
+                }
+                // Header + Footer + 普通列表
+                else -> {
+                    HeaderFooterWrapper(
+                        items = config.items,
+                        modifier = config.modifier,
+                        keySelector = config.keySelector,
+                        listState = listState,
+                        isLoadingMore = config.isLoadingMore,
+                        headerContent = config.headerContent,
+                        footerContent = config.footerContent,
+                        itemContent = config.itemContent
+                    )
+                }
             }
         }
         if (config.onRefresh != null) {

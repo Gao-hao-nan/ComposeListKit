@@ -7,7 +7,7 @@ plugins {
 }
 android {
     namespace = "com.ghn.composelistkit"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -41,5 +41,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.accompanist.swiperefresh)
+    api(libs.reorderable)
+
 }
 
