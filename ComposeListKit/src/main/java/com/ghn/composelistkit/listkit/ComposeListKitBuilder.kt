@@ -1,4 +1,5 @@
 package com.ghn.composelistkit.listkit
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ghn.composelistkit.config.ComposeListKitConfig
@@ -116,5 +117,18 @@ class ComposeListKitBuilder<T> {
     fun dragItemContent(content: @Composable (T, Boolean) -> Unit) = apply {
         config.dragItemContent = content
     }
+
+    fun onSwipeDelete(callback: (T) -> Unit) = apply {
+        config.onSwipeDelete = callback
+    }
+
+    fun swipeBackground(content: @Composable (T) -> Unit) = apply {
+        config.swipeBackground = content
+    }
+
+    fun swipeContentPadding(padding: PaddingValues) = apply {
+        config.swipeContentPadding = padding
+    }
+
 }
 

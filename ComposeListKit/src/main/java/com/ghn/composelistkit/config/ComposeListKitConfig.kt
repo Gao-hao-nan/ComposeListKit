@@ -1,8 +1,10 @@
 package com.ghn.composelistkit.config
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 /**
  * @author 浩楠
@@ -90,6 +92,16 @@ data class ComposeListKitConfig<T>(
     var dragHandle: (@Composable () -> Unit)? = null,
 
     // 拖拽时 item 的渲染 UI（可带 isDragging 状态）
-    var dragItemContent: (@Composable (item: T, isDragging: Boolean) -> Unit)? = null
+    var dragItemContent: (@Composable (item: T, isDragging: Boolean) -> Unit)? = null,
+
+    // 是否启用侧滑删除
+    var onSwipeDelete: ((T) -> Unit)? = null,
+
+    // 侧滑背景自定义内容（默认删除按钮）
+    var swipeBackground: (@Composable (T) -> Unit)? = null,
+
+    // 内容边距（用于背景与 itemContent 同步）
+    var swipeContentPadding: PaddingValues = PaddingValues(0.dp)
+
 )
 

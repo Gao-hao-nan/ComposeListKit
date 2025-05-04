@@ -1,15 +1,27 @@
 package com.ghn.composelistkit
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.ghn.composelistkit.config.ComposeListKitConfig
 import com.ghn.composelistkit.listkit.ComposeListKitBuilder
 import com.ghn.composelistkit.wrapper.DragReorderWrapper
 import com.ghn.composelistkit.wrapper.HeaderFooterWrapper
 import com.ghn.composelistkit.wrapper.RefreshWrapper
+import com.ghn.composelistkit.wrapper.SimpleSwipeToDeleteWrapper
 import com.ghn.composelistkit.wrapper.StateWrapper
 import com.ghn.composelistkit.wrapper.StickySectionWrapper
 
@@ -76,6 +88,34 @@ internal fun <T> InternalComposeListKit(config: ComposeListKitConfig<T>) {
                         itemContent = config.itemContent
                     )
                 }
+                // 侧滑删除
+                config.onSwipeDelete != null -> {
+                    SimpleSwipeToDeleteWrapper(
+                        items = config.items.toMutableStateList(),
+                        listState = listState,
+                        keySelector = config.keySelector,
+                        onDelete = config.onSwipeDelete!!,
+                        contentPadding = config.swipeContentPadding,
+                        backgroundContent = config.swipeBackground ?: { item ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.Red),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "删除",
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .clickable { config.onSwipeDelete?.invoke(item)}
+                                        .padding(horizontal = 20.dp, vertical = 12.dp)
+                                )
+                            }
+                        },
+                        itemContent = config.itemContent
+                    )
+                }
 
                 // 拖拽
                 config.dragItemContent !== null -> {
@@ -107,8 +147,7 @@ internal fun <T> InternalComposeListKit(config: ComposeListKitConfig<T>) {
         }
         if (config.onRefresh != null) {
             RefreshWrapper(
-                isRefreshing = config.isRefreshing,
-                onRefresh = config.onRefresh
+                isRefreshing = config.isRefreshing, onRefresh = config.onRefresh
             ) {
                 listContent()
             }
