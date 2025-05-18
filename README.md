@@ -418,8 +418,3 @@ dependencies {
 ---
 
 本教程由 [ComposeListKit](https://github.com/yourname/ComposeListKit) 团队维护。
-
-```
-
-如果你需要我帮你生成带文档侧边栏的 Docsify 文档结构、或者配套截图目录，也可以继续告诉我。
-```
