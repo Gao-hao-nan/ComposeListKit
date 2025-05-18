@@ -47,7 +47,7 @@ fun StateScreen() {
     val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // 🔥 顶部控制按钮区
+        // 顶部控制按钮区
         Row(
             modifier = Modifier
                 .fillMaxWidth()

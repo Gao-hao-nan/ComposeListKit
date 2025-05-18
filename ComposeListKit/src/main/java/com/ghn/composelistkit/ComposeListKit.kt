@@ -108,7 +108,7 @@ internal fun <T> InternalComposeListKit(config: ComposeListKitConfig<T>) {
                                     text = "删除",
                                     color = Color.White,
                                     modifier = Modifier
-                                        .clickable { config.onSwipeDelete?.invoke(item)}
+                                        .clickable { config.onSwipeDelete?.invoke(item) }
                                         .padding(horizontal = 20.dp, vertical = 12.dp)
                                 )
                             }
@@ -130,7 +130,6 @@ internal fun <T> InternalComposeListKit(config: ComposeListKitConfig<T>) {
                         itemContent = config.dragItemContent!!
                     )
                 }
-                // Header + Footer + 普通列表
                 else -> {
                     HeaderFooterWrapper(
                         items = config.items,

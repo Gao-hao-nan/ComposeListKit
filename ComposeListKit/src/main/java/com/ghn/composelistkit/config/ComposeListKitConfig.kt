@@ -2,6 +2,7 @@ package com.ghn.composelistkit.config
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,6 +37,7 @@ data class ComposeListKitConfig<T>(
 
     // 上拉加载更多回调
     var onLoadMore: (() -> Unit)? = null,
+
 
     // 是否正在加载第一页（用于展示 loading 状态页）
     var isLoadingFirstPage: Boolean = false,
@@ -101,7 +103,8 @@ data class ComposeListKitConfig<T>(
     var swipeBackground: (@Composable (T) -> Unit)? = null,
 
     // 内容边距（用于背景与 itemContent 同步）
-    var swipeContentPadding: PaddingValues = PaddingValues(0.dp)
+    var swipeContentPadding: PaddingValues = PaddingValues(0.dp),
+
+    var listState: LazyListState? = null
 
 )
-

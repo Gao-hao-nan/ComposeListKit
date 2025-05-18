@@ -1,5 +1,6 @@
 package com.ghn.composelistkit.listkit
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ghn.composelistkit.config.ComposeListKitConfig
@@ -129,6 +130,12 @@ class ComposeListKitBuilder<T> {
     fun swipeContentPadding(padding: PaddingValues) = apply {
         config.swipeContentPadding = padding
     }
+
+
+    fun listState(state: LazyListState) = apply {
+        config.listState = state
+    }
+
 
 }
 
