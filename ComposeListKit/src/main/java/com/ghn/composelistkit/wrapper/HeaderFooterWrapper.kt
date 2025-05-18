@@ -35,37 +35,24 @@ fun <T> HeaderFooterWrapper(
     footerContent: (@Composable () -> Unit)? = null,
     itemContent: @Composable (T) -> Unit
 ) {
-    LazyColumn(
-        state = listState,
-        modifier = modifier
-    ) {
-        headerContent?.let {
-            item(key = "HeaderSlot") {
-                it()
+    LazyListContent<T>(
+        modifier = modifier,
+        listState = listState,
+        isLoadingMore = isLoadingMore,
+        contentBuilder = {
+            headerContent?.let {
+                item("HeaderSlot") { it() }
+            }
+            items(
+                items = items,
+                key = keySelector ?: { it.hashCode() }
+            ) { item ->
+                itemContent(item)
+            }
+            footerContent?.let {
+                item("FooterSlot") { it() }
             }
         }
-        items(
-            items = items,
-            key = keySelector ?: { it.hashCode() }
-        ) { item ->
-            itemContent(item)
-        }
-        if (isLoadingMore) {
-            item(key = "LoadMore") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-        }
-        footerContent?.let {
-            item(key = "FooterSlot") {
-                it()
-            }
-        }
-    }
+    )
 }
+

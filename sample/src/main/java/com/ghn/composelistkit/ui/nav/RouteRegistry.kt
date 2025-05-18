@@ -1,10 +1,12 @@
 package com.ghn.composelistkit.ui.nav
 
 import androidx.compose.runtime.Composable
+import com.ghn.composelistkit.ui.screen.DragReorderScreen
 import com.ghn.composelistkit.ui.screen.StateScreen
 import com.ghn.composelistkit.ui.screen.RefreshableDetailScreen
 import com.ghn.composelistkit.ui.screen.SampleHeaderFooterScreen
 import com.ghn.composelistkit.ui.screen.SimpleDetailScreen
+import com.ghn.composelistkit.ui.screen.SimpleSwipeToDeleteScreen
 import com.ghn.composelistkit.ui.screen.StickySectionScreen
 
 /**
@@ -25,7 +27,9 @@ object RouteRegistry {
         "刷新加载更多" to { RefreshableDetailScreen() },
         "状态页面" to { StateScreen() },
         "添加头和尾" to { SampleHeaderFooterScreen() },
-        "吸顶分组" to { StickySectionScreen() }
+        "吸顶分组" to { StickySectionScreen() },
+        "拖拽排序" to { DragReorderScreen() },
+        "侧滑删除" to { SimpleSwipeToDeleteScreen() }
     )
 
     val routeMap: Map<String, @Composable () -> Unit> =

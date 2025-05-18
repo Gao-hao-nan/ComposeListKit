@@ -39,7 +39,7 @@ fun SampleHeaderFooterScreen() {
     var index by remember { mutableStateOf(items.size) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // 🔥 顶部按钮区域
+        // 顶部按钮区域
         Row(
             modifier = Modifier
                 .fillMaxWidth()
