@@ -1,8 +1,3 @@
-当然可以。以下是包含完整章节结构、源码、示例解释的 `README.md` 文档，适合作为 ComposeListKit 的官方教程使用：
-
----
-
-````markdown
 # 🧰 ComposeListKit 示例教程项目
 
 ComposeListKit 是一个基于 Jetpack Compose 构建的高扩展性通用列表组件，内置刷新加载、状态页、分组、拖拽、滑动删除、Header/Footer 等功能。
