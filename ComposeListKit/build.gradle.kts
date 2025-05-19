@@ -3,8 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("maven-publish")
-    id("signing")
 }
+group = "com.github.Gao-hao-nan"
+version = "1.0.0-beta01"
 android {
     namespace = "com.ghn.composelistkit"
     compileSdk = 35
@@ -28,7 +29,7 @@ android {
     }
 }
 
-
+apply(from = rootProject.file("publish-jitpack.gradle.kts"))
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
